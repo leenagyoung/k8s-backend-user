@@ -1,6 +1,8 @@
 spring:
   config:
-    import: file:/etc/config/application-dev.yml
+    import:
+      - file:/etc/config/application-dev.yml
+      - file:/etc/secret/application-secret.yml
 
 # 쿠버네티스 configmap으로 작성함
 #server:

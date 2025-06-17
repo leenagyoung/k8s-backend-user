@@ -1,3 +1,23 @@
 spring:
   application:
     name: k8s-backend-user
+
+
+  kafka:
+    listener:
+      ack-mode: manual_immediate #직접 ack를 호출하겠다 -> kafka에서는 ack를 호출해야 브로커가 받아서 처리한 것으로 인식 -> 메시지를 성공적으로 처리한 경우에만 commit해서 메시지 손실을 방지하겠다
+    consumer:
+      group-id: ${spring.application.name} # 중요한 필드, 그룹 아이디를 기준으로 이벤트를 받았는지 확인해서 -> 한 그룹에 인스턴스가 여러개이면 이 중 하나만 받으면 돼서
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # 네트워크를 통해 정보를 전달하려면 serialization해서 보내야 함 -> java object가 직접 전달될 수 없음
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # 위에처럼 StringDeserializer사용하는 경우도 있음
+      enable-auto-commit: false # manual로 하겠다 했으니깐
+      auto-offset-reset: latest # 컨슈머가 그룹 아이디마다 offset정보를 알고 있음 (어디까지 읽었는지) -> 만약 정보가 없으면 어디서부터 읽을 지 정하는 곳
+      max-poll-records: 10
+      properties:
+        spring.json.trusted.packages: "*" # 패키지 정하기
+        spring.json.use.type.headers: false  # 헤더의 타입 정보 무시(default = true) -> 프로듀서가 메시지를 보낼때 타입을 헤더에 보냄 -> 그럼 받는 쪽에서도 동일한 패키지 경로로 받아야하는데 지금 여기서는 서비스가 나누어져서 그럴 수 없으므로 false로(프로젝트마다 다르니깐)
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # 컨슈머 프로듀서 동일
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false  # 타입 헤더 추가 비활성화(default = true) -> 지정하고 싶으면 패키지 경로 + 클래스명까지

@@ -9,6 +9,7 @@ import com.welab.k8s_backend_user.service.SiteUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.shaded.com.google.protobuf.Api;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +36,11 @@ public class UserAuthController {
     public ApiResponseDto<TokenDto.AccessToken> refresh(@RequestParam @Valid SiteUserRefreshDto refreshDto){
         TokenDto.AccessToken token = siteUserService.refresh(refreshDto);
         return ApiResponseDto.createOk(token);
+    }
+
+    // aroCD-> 블루/그린 배포 테스트
+    @PostMapping(value = "/test")
+    public ApiResponseDto<String> test(){
+        return ApiResponseDto.createOk("버전 1입니다.");
     }
 }

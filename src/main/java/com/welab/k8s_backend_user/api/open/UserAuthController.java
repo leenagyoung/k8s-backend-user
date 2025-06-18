@@ -37,9 +37,9 @@ public class UserAuthController {
         return ApiResponseDto.createOk(token);
     }
 
-    // 블루/그린 배포 테스트
+    // 블루/그린, 카나리 배포 테스트
     @GetMapping(value = "/test")
     public ApiResponseDto<String> test(){
-        return ApiResponseDto.createOk("버전 2입니다.");
+        return ApiResponseDto.createOk("카나리 버전입니다.");
     }
 }

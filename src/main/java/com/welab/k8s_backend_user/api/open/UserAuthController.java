@@ -38,8 +38,8 @@ public class UserAuthController {
         return ApiResponseDto.createOk(token);
     }
 
-    // aroCD-> 블루/그린 배포 테스트
-    @PostMapping(value = "/test")
+    // 블루/그린 배포 테스트
+    @GetMapping(value = "/test")
     public ApiResponseDto<String> test(){
         return ApiResponseDto.createOk("버전 1입니다.");
     }
